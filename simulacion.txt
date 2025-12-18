@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HenkoNails - Reserva tu Turno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .navbar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: none;
+        }
+
+        .logo-text {
+            display: none;
+        }
+
+        .logo-subtitle {
+            display: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 600;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #4a148c;
+        }
+
+        .nav-links a.active {
+            color: #c4a8d3;
+        }
+
+        .login-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c4a8d3;
+            cursor: pointer;
+        }
+
+        .user-icon {
+            width: 35px;
+            height: 35px;
+            background: #c4a8d3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            position: absolute;
+            left: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                justify-content: center;
+                position: relative;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6a1b9a, #4a148c);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .about-section {
+            background: #f9f9f9;
+            padding: 60px 20px;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .type-selector {
+            background: white;
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+
+        .type-buttons {
+            display: inline-flex;
+            gap: 20px;
+            background: #f0f0f0;
+            padding: 8px;
+            border-radius: 50px;
+        }
+
+        .type-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .type-btn.active {
+            background: linear-gradient(135deg, #6a1b9a, #4a148c);
+            color: white;
+        }
+
+        .type-btn:hover:not(.active) {
+            color: #4a148c;
+        }
+
+        .services-section {
+            background: white;
+            padding: 60px 20px;
+        }
+
+        .services-section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #4a148c;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: #f9f9f9;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(74, 20, 140, 0.3);
+            border-color: #4a148c;
+        }
+
+        .service-card h3 {
+            color: #4a148c;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-btn {
+            background: linear-gradient(135deg, #6a1b9a, #4a148c);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .service-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .booking-section {
+            padding: 60px 20px;
+            background: #f9f9f9;
+            display: none;
+        }
+
+        .booking-section.active {
+            display: block;
+        }
+
+        .booking-section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #4a148c;
+        }
+
+        .selected-service {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .selected-service span {
+            color: #4a148c;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: block;
+            margin: 0 auto 30px;
+            background: #666;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        .booking-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4a148c;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background-color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6a1b9a, #4a148c);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(74, 20, 140, 0.5);
+        }
+
+        .testimonials {
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .testimonials h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #4a148c;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .contact-section {
+            background: #f9f9f9;
+            padding: 60px 20px;
+        }
+
+        .contact-section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #4a148c;
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(74, 20, 140, 0.2);
+        }
+
+        .contact-icon {
+            font-size: 2.5em;
+            min-width: 50px;
+        }
+
+        .contact-details h3 {
+            color: #4a148c;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .contact-details p {
+            color: #555;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        .contact-details a {
+            color: #4a148c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            color: #6a1b9a;
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer a {
+            color: #6a1b9a;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .my-bookings-section {
+            background: white;
+            padding: 60px 20px;
+            min-height: 500px;
+            display: none;
+        }
+
+        .my-bookings-section.active {
+            display: block;
+        }
+
+        .my-bookings-section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #4a148c;
+        }
+
+        .my-bookings-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            color: #4a148c;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .btn-reserve {
+            background: linear-gradient(135deg, #6a1b9a, #4a148c);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-reserve:hover {
+            transform: scale(1.05);
+        }
+
+        .bookings-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .booking-item {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #4a148c;
+        }
+
+        .booking-item h3 {
+            color: #4a148c;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .booking-detail {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .booking-detail strong {
+            color: #4a148c;
+            min-width: 120px;
+        }
+
+        .limit-warning {
+            background: #ff9800;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .booking-item {
+            position: relative;
+        }
+
+        .cancel-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #d32f2f;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #6a1b9a;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .curso-info-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .curso-details h3 {
+            color: #4a148c;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .info-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .info-item strong {
+            color: #4a148c;
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info-item p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        .info-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-item ul li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .info-item ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4a148c;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .booking-form-container {
+                padding: 25px;
+            }
+
+            .testimonials h2,
+            .services-section h2,
+            .booking-section h2 {
+                font-size: 2em;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .type-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .type-btn {
+                width: 100%;
+            }
+
+            .curso-info-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#servicios" class="nav-link">SERVICIOS</a></li>
+            <li><a href="#contacto" class="nav-link">CONTACTO</a></li>
+            <li><a href="#mis-turnos" class="nav-link">MIS TURNOS</a></li>
+            <li><a href="#mis-cursos" class="nav-link">MIS CURSOS</a></li>
+            <li>
+                <div class="login-btn">
+                    <div class="user-icon">👤</div>
+                    <span>Iniciar sesión</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <header class="header">
+        <h1>HenkoNails</h1>
+        <p>Reservá tu turno y lucí uñas perfectas</p>
+    </header>
+
+    <section class="about-section">
+        <div class="about-content">
+            <p>Hace 7 años nació mi mejor creación, HenkoNails. Inicié por la pasión de dibujar en un pequeño lienzo de 1x1, y un año y medio después cerré la agenda para clientas nuevas trabajando desde mi casa.</p>
+            
+            <p>En 2019 comencé a dar clases de nail art, más de 5 mil alumnos pasaron por mis capacitaciones virtuales desde varias partes del mundo.</p>
+            
+            <p>Con un crecimiento exponencial, en abril de 2023 inauguré mi propio local en la mejor ubicación de Lanús, donde además de tener un salón con 7 manicuras, logré tener mi academia tan soñada que solo en sus 9 primeros meses ya recibió a más de 1000 alumnas presenciales.</p>
+            
+            <p>Como manicura y empresaria, te invito a que reserves tu turno y experimentes el mejor servicio de uñas.</p>
+        </div>
+    </section>
+
+    <!-- Selector de Tipo -->
+    <section class="type-selector">
+        <div class="type-buttons">
+            <button class="type-btn active" data-type="servicios">Servicios</button>
+            <button class="type-btn" data-type="cursos">Cursos</button>
+        </div>
+    </section>
+
+    <section class="services-section" id="servicesSection">
+        <h2>Elegí tu Servicio</h2>
+        <div class="services-grid">
+            <div class="service-card" data-service="Esmaltado Semipermanente">
+                <h3>💅 Esmaltado Semipermanente</h3>
+                <p>Durabilidad de hasta 3 semanas con brillo perfecto</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+            
+            <div class="service-card" data-service="Soft Gel">
+                <h3>✨ Soft Gel</h3>
+                <p>Extensiones naturales y elegantes</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+            
+            <div class="service-card" data-service="Nail Art">
+                <h3>🎨 Nail Art</h3>
+                <p>Diseños personalizados y creativos</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+            
+            <div class="service-card" data-service="Capping">
+                <h3>💎 Capping</h3>
+                <p>Refuerzo y protección para tus uñas</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+
+            <div class="service-card" data-service="Manicura Completa">
+                <h3>💆‍♀️ Manicura Completa</h3>
+                <p>Tratamiento completo para tus manos</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+
+            <div class="service-card" data-service="Retiro de Esmaltado">
+                <h3>🧼 Retiro de Esmaltado</h3>
+                <p>Retiro profesional y cuidadoso</p>
+                <button class="service-btn">Reservar Turno</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Cursos -->
+    <section class="services-section" id="cursosSection" style="display: none;">
+        <h2>Elegí tu Curso</h2>
+        <div class="services-grid">
+            <div class="service-card" data-curso="Esmaltado Semipermanente y Capping" data-duracion="8 semanas" data-descripcion="Aprende las técnicas profesionales de esmaltado semipermanente desde cero. Incluye preparación de uñas, aplicación perfecta, nail art básico y técnicas de capping para reforzar uñas naturales.">
+                <h3>💅 Esmaltado Semipermanente y Capping</h3>
+                <p><strong>Duración:</strong> 8 semanas</p>
+                <p>Técnicas profesionales desde cero</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+            
+            <div class="service-card" data-curso="Soft Gel Avanzado" data-duracion="10 semanas" data-descripcion="Domina la técnica de soft gel para crear extensiones naturales y elegantes. Aprenderás estructurado correcto, formas perfectas, tips y moldes, y mantenimiento profesional.">
+                <h3>✨ Soft Gel Avanzado</h3>
+                <p><strong>Duración:</strong> 10 semanas</p>
+                <p>Extensiones profesionales y naturales</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+            
+            <div class="service-card" data-curso="Nail Art Profesional" data-duracion="12 semanas" data-descripcion="Conviértete en experta en diseños de uñas. Curso completo que incluye técnicas de decoración, uso de herramientas profesionales, tendencias actuales, diseños complejos y desarrollo de tu estilo único.">
+                <h3>🎨 Nail Art Profesional</h3>
+                <p><strong>Duración:</strong> 12 semanas</p>
+                <p>Diseños creativos y personalizados</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+            
+            <div class="service-card" data-curso="Manicura Rusa Completa" data-duracion="6 semanas" data-descripcion="Técnica europea de manicura con aparatología. Aprende preparación perfecta de cutículas, uso de torno eléctrico, fresas profesionales y acabado impecable de alta duración.">
+                <h3>💎 Manicura Rusa Completa</h3>
+                <p><strong>Duración:</strong> 6 semanas</p>
+                <p>Técnica europea con aparatología</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+
+            <div class="service-card" data-curso="Gestión y Redes Sociales" data-duracion="8 semanas" data-descripcion="Aprende a gestionar tu negocio de uñas como una profesional. Incluye marketing digital, manejo de redes sociales, fotografía de uñas, atención al cliente y estrategias de crecimiento.">
+                <h3>📱 Gestión y Redes Sociales</h3>
+                <p><strong>Duración:</strong> 8 semanas</p>
+                <p>Hace crecer tu negocio</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+
+            <div class="service-card" data-curso="Pack Completo Profesional" data-duracion="24 semanas" data-descripcion="El pack más completo que incluye todos nuestros cursos. Desde esmaltado básico hasta técnicas avanzadas, nail art, gestión de negocio y todo lo que necesitas para convertirte en una profesional completa.">
+                <h3>🌟 Pack Completo Profesional</h3>
+                <p><strong>Duración:</strong> 24 semanas</p>
+                <p>Todos los cursos incluidos</p>
+                <button class="service-btn">Ver Curso</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de información del curso -->
+    <section class="booking-section" id="cursoInfoSection">
+        <button class="back-btn" id="backCursoBtn">← Volver a Cursos</button>
+        <h2>Información del Curso</h2>
+        <div class="curso-info-container">
+            <div class="curso-details">
+                <h3 id="cursoTitle"></h3>
+                <div class="info-item">
+                    <strong>⏱️ Duración:</strong> <span id="cursoDuration"></span>
+                </div>
+                <div class="info-item">
+                    <strong>📚 Qué aprenderás:</strong>
+                    <p id="cursoDescription"></p>
+                </div>
+                <div class="info-item">
+                    <strong>✅ Incluye:</strong>
+                    <ul>
+                        <li>Acceso de por vida a todos los videos</li>
+                        <li>Material descargable en PDF</li>
+                        <li>Certificado de participación</li>
+                        <li>Grupo de consultas exclusivo</li>
+                        <li>Seguimiento personalizado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="booking-form-container">
+            <h3 style="text-align: center; color: #4a148c; margin-bottom: 20px;">Inscribite al Curso</h3>
+            <div class="success-message" id="successCursoMessage">
+                ¡Inscripción exitosa! Te enviamos la información del curso a tu correo.
+            </div>
+            
+            <form id="cursoForm">
+                <input type="hidden" id="cursoSeleccionado" name="curso">
+
+                <div class="form-group">
+                    <label for="nombreCurso">Nombre *</label>
+                    <input type="text" id="nombreCurso" name="nombre" required placeholder="Tu nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidoCurso">Apellido *</label>
+                    <input type="text" id="apellidoCurso" name="apellido" required placeholder="Tu apellido">
+                </div>
+
+                <div class="form-group">
+                    <label for="documentoCurso">Número de Documento *</label>
+                    <input type="text" id="documentoCurso" name="documento" required placeholder="DNI sin puntos">
+                </div>
+
+                <div class="form-group">
+                    <label for="emailCurso">Email *</label>
+                    <input type="email" id="emailCurso" name="email" required placeholder="tucorreo@ejemplo.com">
+                </div>
+
+                <button type="submit" class="submit-btn">Confirmar Inscripción</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="booking-section" id="bookingSection">
+        <button class="back-btn" id="backBtn">← Volver a Servicios</button>
+        <h2>Completá tus Datos</h2>
+        <div class="selected-service">
+            Servicio seleccionado: <span id="selectedServiceName"></span>
+        </div>
+        <div class="booking-form-container">
+            <div class="success-message" id="successMessage">
+                ¡Turno reservado exitosamente! Te enviamos un email de confirmación a tu correo.
+            </div>
+            <div class="limit-warning" id="limitWarning">
+                Has alcanzado el límite de 5 turnos activos. Para reservar un nuevo turno, debes cancelar uno existente desde "Mis Turnos".
+            </div>
+            
+            <form id="bookingForm">
+                <input type="hidden" id="servicioSeleccionado" name="servicio">
+
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido">Apellido *</label>
+                    <input type="text" id="apellido" name="apellido" required placeholder="Tu apellido">
+                </div>
+
+                <div class="form-group">
+                    <label for="documento">Número de Documento *</label>
+                    <input type="text" id="documento" name="documento" required placeholder="DNI sin puntos">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required placeholder="tucorreo@ejemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">Fecha del Turno *</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="horario">Horario *</label>
+                    <select id="horario" name="horario" required>
+                        <option value="">Selecciona un horario</option>
+                        <option value="09:00">09:00 hs</option>
+                        <option value="10:00">10:00 hs</option>
+                        <option value="11:00">11:00 hs</option>
+                        <option value="12:00">12:00 hs</option>
+                        <option value="13:00">13:00 hs</option>
+                        <option value="14:00">14:00 hs</option>
+                        <option value="15:00">15:00 hs</option>
+                        <option value="16:00">16:00 hs</option>
+                        <option value="17:00">17:00 hs</option>
+                        <option value="18:00">18:00 hs</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Confirmar Reserva</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>Lo que dicen nuestras clientas</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p>Participé en el curso online de esmaltado semipermanente, nivelación y capping (también cursé presencial) y la verdad que en el curso online, aprendí y fijé contenidos nuevos, súper completas las clases, bien explicadas y no solo que pude sacarme todas las dudas si no, lo más importante tuve el seguimiento profesional después de terminado el mismo! 100% recomendable! Por más cursos en HenkoNails amores💖!!</p>
+            </div>
+            
+            <div class="testimonial-card">
+                <p>Participé en el curso de soft gel y también hice el de capping. Antes que nada quiero aclarar que ya había tomado cursos en otras academias. La verdad que los cursos me dejaron sin palabras. Muy bien explicado todo. Ame la parte de la teoría y la práctica un 10, a partir del mismo me di cuenta que en otros cursos no me habían enseñado NADA. Súper recomiendo a chicas que quieren empezar o se quieren especializar mucho mejor</p>
+            </div>
+            
+            <div class="testimonial-card">
+                <p>Yo estoy en el de redes y me está volando la cabeza! Sos una genia! Literal, amo desde el lugar en el que nos hablas. Tu postura y la postura que le das al negocio. Empecé a leer libros con respecto a esto hace poco y se nota que hablas con información de verdad y que tenes tus objetivos claros. Quiero eso mismo para mi, quiero mi propio negocio y a lo grande pero con las bases firmes y claras. No me arrepiento para nada de haber invertido en vos. Gracias por tanto🙌🏼✨🔥</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contactSection">
+        <h2>Contacto</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-details">
+                        <h3>Teléfono</h3>
+                        <p><a href="tel:+5491145678900">+54 9 11 4567-8900</a></p>
+                        <p><a href="https://wa.me/5491145678900" target="_blank">WhatsApp</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <div class="contact-details">
+                        <h3>Email</h3>
+                        <p><a href="mailto:info@henkonails.com">info@henkonails.com</a></p>
+                        <p><a href="mailto:cursos@henkonails.com">cursos@henkonails.com</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <div class="contact-details">
+                        <h3>Redes Sociales</h3>
+                        <p><a href="https://www.instagram.com/henkonails_oficial" target="_blank">@henkonails_oficial</a></p>
+                        <p>Facebook: HenkoNails Oficial</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">🕒</div>
+                    <div class="contact-details">
+                        <h3>Horarios de Atención</h3>
+                        <p>Lunes a Viernes: 9:00 - 20:00 hs</p>
+                        <p>Sábados: 9:00 - 18:00 hs</p>
+                        <p>Domingos: Cerrado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Mis Turnos -->
+    <section class="my-bookings-section" id="misTurnosSection">
+        <h2>Mis Turnos</h2>
+        <div class="my-bookings-container">
+            <div class="empty-state" id="emptyTurnos">
+                <div class="empty-icon">📅</div>
+                <h3>Todavía no tenés turnos reservados</h3>
+                <p>Cuando reserves un turno, aparecerá aquí con toda la información</p>
+                <button class="btn-reserve" onclick="document.querySelector('.type-selector').scrollIntoView({ behavior: 'smooth' })">Reservar Turno</button>
+            </div>
+            <div class="bookings-list" id="turnosList" style="display: none;">
+                <!-- Aquí se mostrarán los turnos -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Mis Cursos -->
+    <section class="my-bookings-section" id="misCursosSection">
+        <h2>Mis Cursos</h2>
+        <div class="my-bookings-container">
+            <div class="empty-state" id="emptyCursos">
+                <div class="empty-icon">📚</div>
+                <h3>Todavía no tenés cursos</h3>
+                <p>Cuando te inscribas a un curso, aparecerá aquí con toda la información</p>
+                <button class="btn-reserve" onclick="document.querySelectorAll('.type-btn')[1].click(); document.querySelector('.type-selector').scrollIntoView({ behavior: 'smooth' })">Ver Cursos</button>
+            </div>
+            <div class="bookings-list" id="cursosList" style="display: none;">
+                <!-- Aquí se mostrarán los cursos -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 AB Nails Academy. Todos los derechos reservados.</p>
+        <p>Síguenos en Instagram: <a href="https://www.instagram.com/ab.nails_/?hl=es">@ab.nails_</a></p>
+        <p>WhatsApp: <a href="https://wa.link/f273ka">1160023012</a></p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        // Smooth scroll para los links del navbar
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                
+                // Remover clase active de todos los links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Agregar clase active al link clickeado
+                this.classList.add('active');
+                
+                // Ocultar todas las secciones especiales
+                document.getElementById('misTurnosSection').classList.remove('active');
+                document.getElementById('misCursosSection').classList.remove('active');
+                
+                if (target === '#servicios') {
+                    document.querySelector('.type-selector').scrollIntoView({ behavior: 'smooth' });
+                } else if (target === '#contacto') {
+                    document.querySelector('.contact-section').scrollIntoView({ behavior: 'smooth' });
+                } else if (target === '#mis-turnos') {
+                    document.getElementById('misTurnosSection').classList.add('active');
+                    document.getElementById('misTurnosSection').scrollIntoView({ behavior: 'smooth' });
+                } else if (target === '#mis-cursos') {
+                    document.getElementById('misCursosSection').classList.add('active');
+                    document.getElementById('misCursosSection').scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Cerrar menú móvil si está abierto
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Establecer fecha mínima como hoy
+        const fechaInput = document.getElementById('fecha');
+        const today = new Date().toISOString().split('T')[0];
+        fechaInput.setAttribute('min', today);
+
+        const servicesSection = document.getElementById('servicesSection');
+        const cursosSection = document.getElementById('cursosSection');
+        const bookingSection = document.getElementById('bookingSection');
+        const cursoInfoSection = document.getElementById('cursoInfoSection');
+        const selectedServiceName = document.getElementById('selectedServiceName');
+        const servicioSeleccionado = document.getElementById('servicioSeleccionado');
+        const backBtn = document.getElementById('backBtn');
+        const backCursoBtn = document.getElementById('backCursoBtn');
+
+        // Array para guardar turnos y cursos (simulando base de datos)
+        let misTurnos = [];
+        let misCursos = [];
+        let datosUsuario = null; // Para guardar datos del usuario después del primer turno
+        const MAX_TURNOS = 5; // Límite de turnos activos
+
+        // Función para verificar límite de turnos
+        function verificarLimiteTurnos() {
+            const limitWarning = document.getElementById('limitWarning');
+            const bookingForm = document.getElementById('bookingForm');
+            
+            if (misTurnos.length >= MAX_TURNOS) {
+                limitWarning.style.display = 'block';
+                bookingForm.style.display = 'none';
+                return false;
+            } else {
+                limitWarning.style.display = 'none';
+                bookingForm.style.display = 'block';
+                return true;
+            }
+        }
+
+        // Función para cancelar un turno
+        function cancelarTurno(index) {
+            if (confirm('¿Estás seguro que querés cancelar este turno?')) {
+                misTurnos.splice(index, 1);
+                actualizarMisTurnos();
+            }
+        }
+
+        // Función para verificar si el usuario ya tiene turnos
+        function verificarUsuarioRegistrado() {
+            const nombreField = document.getElementById('nombre');
+            const apellidoField = document.getElementById('apellido');
+            const emailField = document.getElementById('email');
+            const documentoField = document.getElementById('documento');
+            
+            if (datosUsuario) {
+                // Usuario ya registrado - solo mostrar campo de documento
+                nombreField.parentElement.style.display = 'none';
+                apellidoField.parentElement.style.display = 'none';
+                emailField.parentElement.style.display = 'none';
+                
+                // Prellenar documento si existe
+                if (datosUsuario.documento) {
+                    documentoField.value = datosUsuario.documento;
+                }
+                
+                // Remover el atributo required de los campos ocultos
+                nombreField.removeAttribute('required');
+                apellidoField.removeAttribute('required');
+                emailField.removeAttribute('required');
+            } else {
+                // Usuario nuevo - mostrar todos los campos
+                nombreField.parentElement.style.display = 'block';
+                apellidoField.parentElement.style.display = 'block';
+                emailField.parentElement.style.display = 'block';
+                
+                // Agregar el atributo required
+                nombreField.setAttribute('required', 'required');
+                apellidoField.setAttribute('required', 'required');
+                emailField.setAttribute('required', 'required');
+            }
+        }
+
+        // Función para actualizar la vista de Mis Turnos
+        function actualizarMisTurnos() {
+            const emptyTurnos = document.getElementById('emptyTurnos');
+            const turnosList = document.getElementById('turnosList');
+            
+            if (misTurnos.length === 0) {
+                emptyTurnos.style.display = 'block';
+                turnosList.style.display = 'none';
+            } else {
+                emptyTurnos.style.display = 'none';
+                turnosList.style.display = 'grid';
+                turnosList.innerHTML = misTurnos.map((turno, index) => `
+                    <div class="booking-item">
+                        <h3>${turno.servicio}</h3>
+                        <div class="booking-detail"><strong>Nombre:</strong> ${turno.nombre} ${turno.apellido}</div>
+                        <div class="booking-detail"><strong>DNI:</strong> ${turno.documento}</div>
+                        <div class="booking-detail"><strong>Email:</strong> ${turno.email}</div>
+                        <div class="booking-detail"><strong>Fecha:</strong> ${turno.fecha}</div>
+                        <div class="booking-detail"><strong>Horario:</strong> ${turno.horario}</div>
+                        <button class="cancel-btn" onclick="cancelarTurno(${index})">Cancelar Turno</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Función para actualizar la vista de Mis Cursos
+        function actualizarMisCursos() {
+            const emptyCursos = document.getElementById('emptyCursos');
+            const cursosList = document.getElementById('cursosList');
+            
+            if (misCursos.length === 0) {
+                emptyCursos.style.display = 'block';
+                cursosList.style.display = 'none';
+            } else {
+                emptyCursos.style.display = 'none';
+                cursosList.style.display = 'grid';
+                cursosList.innerHTML = misCursos.map(curso => `
+                    <div class="booking-item">
+                        <h3>${curso.curso}</h3>
+                        <div class="booking-detail"><strong>Nombre:</strong> ${curso.nombre} ${curso.apellido}</div>
+                        <div class="booking-detail"><strong>DNI:</strong> ${curso.documento}</div>
+                        <div class="booking-detail"><strong>Email:</strong> ${curso.email}</div>
+                        <div class="booking-detail"><strong>Estado:</strong> Inscripto ✓</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Cambiar entre Servicios y Cursos
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const type = this.getAttribute('data-type');
+                if (type === 'servicios') {
+                    servicesSection.style.display = 'block';
+                    cursosSection.style.display = 'none';
+                    bookingSection.classList.remove('active');
+                    cursoInfoSection.classList.remove('active');
+                } else {
+                    servicesSection.style.display = 'none';
+                    cursosSection.style.display = 'block';
+                    bookingSection.classList.remove('active');
+                    cursoInfoSection.classList.remove('active');
+                }
+            });
+        });
+
+        // Manejar clic en tarjetas de servicio
+        document.querySelectorAll('#servicesSection .service-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.classList.contains('service-btn') || e.target.closest('.service-btn')) {
+                    const serviceName = this.getAttribute('data-service');
+                    selectedServiceName.textContent = serviceName;
+                    servicioSeleccionado.value = serviceName;
+                    
+                    servicesSection.style.display = 'none';
+                    bookingSection.classList.add('active');
+                    
+                    // Verificar límite de turnos
+                    verificarLimiteTurnos();
+                    
+                    // Verificar si el usuario ya está registrado
+                    if (verificarLimiteTurnos()) {
+                        verificarUsuarioRegistrado();
+                    }
+                    
+                    bookingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Manejar clic en tarjetas de cursos
+        document.querySelectorAll('#cursosSection .service-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.classList.contains('service-btn') || e.target.closest('.service-btn')) {
+                    const cursoName = this.getAttribute('data-curso');
+                    const cursoDuration = this.getAttribute('data-duracion');
+                    const cursoDesc = this.getAttribute('data-descripcion');
+                    
+                    document.getElementById('cursoTitle').textContent = cursoName;
+                    document.getElementById('cursoDuration').textContent = cursoDuration;
+                    document.getElementById('cursoDescription').textContent = cursoDesc;
+                    document.getElementById('cursoSeleccionado').value = cursoName;
+                    
+                    cursosSection.style.display = 'none';
+                    cursoInfoSection.classList.add('active');
+                    
+                    cursoInfoSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Botón volver de servicios
+        backBtn.addEventListener('click', function() {
+            bookingSection.classList.remove('active');
+            servicesSection.style.display = 'block';
+            document.getElementById('bookingForm').reset();
+            servicesSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Botón volver de cursos
+        backCursoBtn.addEventListener('click', function() {
+            cursoInfoSection.classList.remove('active');
+            cursosSection.style.display = 'block';
+            document.getElementById('cursoForm').reset();
+            cursosSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Manejar envío del formulario de turnos
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Verificar límite antes de guardar
+            if (misTurnos.length >= MAX_TURNOS) {
+                alert('Has alcanzado el límite de 5 turnos activos. Por favor, cancela un turno existente antes de reservar uno nuevo.');
+                return;
+            }
+            
+            let formData;
+            
+            if (datosUsuario) {
+                // Usuario registrado - usar datos guardados
+                formData = {
+                    servicio: servicioSeleccionado.value,
+                    nombre: datosUsuario.nombre,
+                    apellido: datosUsuario.apellido,
+                    documento: document.getElementById('documento').value,
+                    email: datosUsuario.email,
+                    fecha: document.getElementById('fecha').value,
+                    horario: document.getElementById('horario').value
+                };
+            } else {
+                // Usuario nuevo - tomar todos los datos del formulario
+                formData = {
+                    servicio: servicioSeleccionado.value,
+                    nombre: document.getElementById('nombre').value,
+                    apellido: document.getElementById('apellido').value,
+                    documento: document.getElementById('documento').value,
+                    email: document.getElementById('email').value,
+                    fecha: document.getElementById('fecha').value,
+                    horario: document.getElementById('horario').value
+                };
+                
+                // Guardar datos del usuario para futuros turnos
+                datosUsuario = {
+                    nombre: formData.nombre,
+                    apellido: formData.apellido,
+                    documento: formData.documento,
+                    email: formData.email
+                };
+            }
+            
+            // Guardar turno
+            misTurnos.push(formData);
+            actualizarMisTurnos();
+            
+            console.log('Datos del turno:', formData);
+            console.log('Turnos activos:', misTurnos.length);
+            
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            this.reset();
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                bookingSection.classList.remove('active');
+                servicesSection.style.display = 'block';
+                servicesSection.scrollIntoView({ behavior: 'smooth' });
+            }, 3000);
+            
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Manejar envío del formulario de cursos
+        document.getElementById('cursoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                curso: document.getElementById('cursoSeleccionado').value,
+                nombre: document.getElementById('nombreCurso').value,
+                apellido: document.getElementById('apellidoCurso').value,
+                documento: document.getElementById('documentoCurso').value,
+                email: document.getElementById('emailCurso').value
+            };
+            
+            // Guardar curso
+            misCursos.push(formData);
+            actualizarMisCursos();
+            
+            console.log('Datos de inscripción al curso:', formData);
+            
+            const successMessage = document.getElementById('successCursoMessage');
+            successMessage.style.display = 'block';
+            
+            this.reset();
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                cursoInfoSection.classList.remove('active');
+                cursosSection.style.display = 'block';
+                cursosSection.scrollIntoView({ behavior: 'smooth' });
+            }, 3000);
+            
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>
