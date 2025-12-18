@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HenkoNails</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;color:#333}
+nav{background:#fff;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.1);position:sticky;top:0;z-index:1000;display:flex;justify-content:center;gap:30px}
+nav a{text-decoration:none;color:#000;font-weight:600;cursor:pointer}
+nav a:hover{color:#4a148c}
+.header{background:linear-gradient(135deg,#6a1b9a,#4a148c);padding:60px 20px;text-align:center;color:#fff}
+.header h1{font-size:3em;margin-bottom:20px}
+.carousel-wrap{padding:40px 20px;background:#f9f9f9}
+.carousel{max-width:1200px;margin:0 auto;height:500px;position:relative;background:#fff;border-radius:15px;overflow:hidden}
+.slides{display:flex;height:100%;transition:transform 0.5s}
+.slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.slide img{max-width:100%;max-height:100%;object-fit:contain}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.8);border:none;padding:15px 20px;font-size:1.5em;cursor:pointer;z-index:10}
+.arrow.left{left:20px}
+.arrow.right{right:20px}
+.dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10}
+.dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer}
+.dot.active{background:#fff}
+.section{padding:60px 20px;max-width:1200px;margin:0 auto}
+.section.hidden{display:none}
+.section h2{text-align:center;font-size:2.5em;color:#4a148c;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}
+.card{background:#f9f9f9;padding:30px;border-radius:15px;text-align:center;cursor:pointer;transition:transform 0.3s}
+.card:hover{transform:translateY(-5px);border:2px solid #4a148c}
+.card h3{color:#4a148c;font-size:1.5em;margin-bottom:15px}
+.btn{background:linear-gradient(135deg,#6a1b9a,#4a148c);color:#fff;border:none;padding:12px 30px;border-radius:25px;font-size:1em;font-weight:bold;cursor:pointer;margin-top:15px}
+.form-box{max-width:600px;margin:30px auto;background:#f9f9f9;padding:40px;border-radius:15px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:bold}
+.form-group input,.form-group select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#4a148c}
+.back-btn{background:#666;color:#fff;border:none;padding:10px 25px;border-radius:20px;cursor:pointer;margin-bottom:20px}
+.msg{padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;display:none}
+.msg.success{background:#4CAF50;color:#fff}
+.msg.warning{background:#ff9800;color:#fff}
+footer{background:#333;color:#fff;padding:40px 20px;text-align:center;margin-top:60px}
+footer a{color:#6a1b9a;text-decoration:none}
+@media(max-width:768px){.carousel{height:350px}}
+</style>
+</head>
+<body>
+
+<nav>
+<a onclick="show('servicios')">SERVICIOS</a>
+<a onclick="show('contacto')">CONTACTO</a>
+<a onclick="show('turnos')">MIS TURNOS</a>
+<a onclick="show('cursos')">MIS CURSOS</a>
+</nav>
+
+<div class="header">
+<h1>HenkoNails</h1>
+<p>Reservá tu turno y lucí uñas perfectas</p>
+</div>
+
+<div class="carousel-wrap">
+<div class="carousel">
+<div class="slides" id="slides">
+<div class="slide"><img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200" alt="1"></div>
+<div class="slide"><img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=1200" alt="2"></div>
+<div class="slide"><img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1200" alt="3"></div>
+<div class="slide"><img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=1200" alt="4"></div>
+</div>
+<button class="arrow left" onclick="move(-1)">❮</button>
+<button class="arrow right" onclick="move(1)">❯</button>
+<div class="dots" id="dots"></div>
+</div>
+</div>
+
+<div class="section" style="background:#f9f9f9">
+<p style="text-align:center;font-size:1.1em;line-height:1.8;max-width:900px;margin:0 auto">Hace 7 años nació mi mejor creación, HenkoNails. En 2019 comencé a dar clases de nail art, más de 5 mil alumnos pasaron por mis capacitaciones virtuales. En 2023 inauguré mi propio local en Lanús con 7 manicuras y mi academia soñada.</p>
+</div>
+
+<div class="section" id="main">
+<div style="text-align:center;margin-bottom:40px">
+<button class="btn" onclick="toggle('s')" id="bs">Servicios</button>
+<button class="btn" onclick="toggle('c')" id="bc" style="opacity:0.6;margin-left:10px">Cursos</button>
+</div>
+
+<div id="slist">
+<h2>Elegí tu Servicio</h2>
+<div class="grid">
+<div class="card" onclick="pick('Esmaltado Semipermanente')"><h3>💅 Esmaltado Semipermanente</h3><p>Durabilidad de 3 semanas</p><button class="btn">Reservar</button></div>
+<div class="card" onclick="pick('Soft Gel')"><h3>✨ Soft Gel</h3><p>Extensiones naturales</p><button class="btn">Reservar</button></div>
+<div class="card" onclick="pick('Nail Art')"><h3>🎨 Nail Art</h3><p>Diseños personalizados</p><button class="btn">Reservar</button></div>
+<div class="card" onclick="pick('Capping')"><h3>💎 Capping</h3><p>Refuerzo y protección</p><button class="btn">Reservar</button></div>
+</div>
+</div>
+
+<div id="clist" class="hidden">
+<h2>Elegí tu Curso</h2>
+<div class="grid">
+<div class="card" onclick="pickC('Esmaltado Semipermanente','8 semanas')"><h3>💅 Esmaltado</h3><p><strong>8 semanas</strong></p><button class="btn">Ver Curso</button></div>
+<div class="card" onclick="pickC('Soft Gel','10 semanas')"><h3>✨ Soft Gel</h3><p><strong>10 semanas</strong></p><button class="btn">Ver Curso</button></div>
+<div class="card" onclick="pickC('Nail Art','12 semanas')"><h3>🎨 Nail Art</h3><p><strong>12 semanas</strong></p><button class="btn">Ver Curso</button></div>
+</div>
+</div>
+</div>
+
+<div class="section hidden" id="fturno">
+<button class="back-btn" onclick="back()">← Volver</button>
+<h2>Reservar Turno</h2>
+<p style="text-align:center;margin-bottom:20px">Servicio: <strong id="sname"></strong></p>
+<div class="form-box">
+<div class="msg warning" id="lmsg">Límite de 5 turnos alcanzado</div>
+<div class="msg success" id="smsg">¡Turno reservado!</div>
+<form id="tf">
+<div class="form-group" id="ng"><label>Nombre *</label><input type="text" id="n" required></div>
+<div class="form-group" id="ag"><label>Apellido *</label><input type="text" id="a" required></div>
+<div class="form-group"><label>DNI *</label><input type="text" id="d" required></div>
+<div class="form-group" id="eg"><label>Email *</label><input type="email" id="e" required></div>
+<div class="form-group"><label>Fecha *</label><input type="date" id="f" required></div>
+<div class="form-group"><label>Horario *</label><select id="h" required><option value="">Seleccionar</option><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="12:00">12:00</option><option value="15:00">15:00</option><option value="17:00">17:00</option></select></div>
+<button type="submit" class="btn" style="width:100%;padding:15px">Confirmar</button>
+</form>
+</div>
+</div>
+
+<div class="section hidden" id="fcurso">
+<button class="back-btn" onclick="backC()">← Volver</button>
+<h2>Inscripción</h2>
+<p style="text-align:center"><strong id="cn"></strong> - <span id="cd"></span></p>
+<div class="form-box">
+<div class="msg success" id="scmsg">¡Inscripción exitosa!</div>
+<form id="cf">
+<div class="form-group"><label>Nombre *</label><input type="text" id="nc" required></div>
+<div class="form-group"><label>Apellido *</label><input type="text" id="ac" required></div>
+<div class="form-group"><label>DNI *</label><input type="text" id="dc" required></div>
+<div class="form-group"><label>Email *</label><input type="email" id="ec" required></div>
+<button type="submit" class="btn" style="width:100%;padding:15px">Inscribirse</button>
+</form>
+</div>
+</div>
+
+<div class="section hidden" id="sturno">
+<h2>Mis Turnos</h2>
+<div id="tcont"></div>
+</div>
+
+<div class="section hidden" id="scurso">
+<h2>Mis Cursos</h2>
+<div id="ccont"></div>
+</div>
+
+<div class="section hidden" id="scontacto" style="background:#f9f9f9">
+<h2>Contacto</h2>
+<div class="grid">
+<div class="card" style="cursor:default"><h3>📞 Teléfono</h3><p>+54 9 11 4567-8900</p></div>
+<div class="card" style="cursor:default"><h3>✉️ Email</h3><p>info@henkonails.com</p></div>
+<div class="card" style="cursor:default"><h3>📱 Instagram</h3><p>@henkonails_oficial</p></div>
+<div class="card" style="cursor:default"><h3>🕒 Horarios</h3><p>Lun-Vie: 9-20hs<br>Sáb: 9-18hs</p></div>
+</div>
+</div>
+
+<footer>
+<p>&copy; 2024 HenkoNails</p>
+<p>Instagram: <a href="https://instagram.com/henkonails_oficial">@henkonails_oficial</a></p>
+<p>WhatsApp: <a href="https://wa.me/5491145678900">+54 9 11 4567-8900</a></p>
+</footer>
+
+<script>
+let ts=[],cs=[],u=null,i=0,cur='';
+const MAX=5;
+
+// Carrusel
+for(let j=0;j<4;j++){
+let dot=document.createElement('div');
+dot.className='dot'+(j===0?' active':'');
+dot.onclick=()=>go(j);
+document.getElementById('dots').appendChild(dot);
+}
+setInterval(()=>move(1),5000);
+
+function move(n){
+i+=n;
+if(i>=4)i=0;
+if(i<0)i=3;
+document.getElementById('slides').style.transform=`translateX(-${i*100}%)`;
+document.querySelectorAll('.dot').forEach((dot,idx)=>{
+dot.className='dot'+(idx===i?' active':'');
+});
+}
+
+function go(n){
+i=n-1;
+move(1);
+}
+
+// Navegación
+function show(s){
+document.getElementById('main').classList.add('hidden');
+document.getElementById('fturno').classList.add('hidden');
+document.getElementById('fcurso').classList.add('hidden');
+document.getElementById('sturno').classList.add('hidden');
+document.getElementById('scurso').classList.add('hidden');
+document.getElementById('scontacto').classList.add('hidden');
+
+if(s==='servicios'){
+document.getElementById('main').classList.remove('hidden');
+}else if(s==='contacto'){
+document.getElementById('scontacto').classList.remove('hidden');
+}else if(s==='turnos'){
+document.getElementById('sturno').classList.remove('hidden');
+showT();
+}else if(s==='cursos'){
+document.getElementById('scurso').classList.remove('hidden');
+showC();
+}
+}
+
+function toggle(t){
+document.getElementById('bs').style.opacity=t==='s'?'1':'0.6';
+document.getElementById('bc').style.opacity=t==='c'?'1':'0.6';
+if(t==='s'){
+document.getElementById('slist').classList.remove('hidden');
+document.getElementById('clist').classList.add('hidden');
+}else{
+document.getElementById('slist').classList.add('hidden');
+document.getElementById('clist').classList.remove('hidden');
+}
+}
+
+// Servicios
+function pick(s){
+cur=s;
+if(ts.length>=MAX){
+document.getElementById('main').classList.add('hidden');
+document.getElementById('fturno').classList.remove('hidden');
+document.getElementById('lmsg').style.display='block';
+document.getElementById('tf').style.display='none';
+return;
+}
+document.getElementById('sname').textContent=s;
+document.getElementById('main').classList.add('hidden');
+document.getElementById('fturno').classList.remove('hidden');
+document.getElementById('lmsg').style.display='none';
+document.getElementById('tf').style.display='block';
+
+if(u){
+document.getElementById('ng').style.display='none';
+document.getElementById('ag').style.display='none';
+document.getElementById('eg').style.display='none';
+document.getElementById('d').value=u.dni;
+document.getElementById('n').removeAttribute('required');
+document.getElementById('a').removeAttribute('required');
+document.getElementById('e').removeAttribute('required');
+}
+}
+
+function pickC(c,dur){
+document.getElementById('cn').textContent=c;
+document.getElementById('cd').textContent=dur;
+document.getElementById('main').classList.add('hidden');
+document.getElementById('fcurso').classList.remove('hidden');
+}
+
+function back(){
+document.getElementById('fturno').classList.add('hidden');
+document.getElementById('main').classList.remove('hidden');
+document.getElementById('tf').reset();
+}
+
+function backC(){
+document.getElementById('fcurso').classList.add('hidden');
+document.getElementById('main').classList.remove('hidden');
+document.getElementById('cf').reset();
+}
+
+// Formularios
+document.getElementById('tf').onsubmit=function(e){
+e.preventDefault();
+const t={
+servicio:cur,
+nombre:u?u.nombre:document.getElementById('n').value,
+apellido:u?u.apellido:document.getElementById('a').value,
+dni:document.getElementById('d').value,
+email:u?u.email:document.getElementById('e').value,
+fecha:document.getElementById('f').value,
+horario:document.getElementById('h').value
+};
+
+if(!u){
+u={nombre:t.nombre,apellido:t.apellido,dni:t.dni,email:t.email};
+}
+
+ts.push(t);
+document.getElementById('smsg').style.display='block';
+setTimeout(()=>{
+document.getElementById('smsg').style.display='none';
+back();
+},2000);
+};
+
+document.getElementById('cf').onsubmit=function(e){
+e.preventDefault();
+const c={
+curso:document.getElementById('cn').textContent,
+nombre:document.getElementById('nc').value,
+apellido:document.getElementById('ac').value,
+dni:document.getElementById('dc').value,
+email:document.getElementById('ec').value
+};
+cs.push(c);
+document.getElementById('scmsg').style.display='block';
+setTimeout(()=>{
+document.getElementById('scmsg').style.display='none';
+backC();
+},2000);
+};
+
+// Mis turnos/cursos
+function showT(){
+const cont=document.getElementById('tcont');
+if(ts.length===0){
+cont.innerHTML='<div style="text-align:center;padding:80px 20px"><h3 style="color:#4a148c">No tenés turnos</h3><button class="btn" onclick="show(\'servicios\')">Reservar</button></div>';
+}else{
+cont.innerHTML='<div class="grid">'+ts.map((t,idx)=>`
+<div class="card" style="text-align:left">
+<h3>${t.servicio}</h3>
+<p><strong>Nombre:</strong> ${t.nombre} ${t.apellido}</p>
+<p><strong>Fecha:</strong> ${t.fecha} - ${t.horario}</p>
+<button class="btn" style="background:#f44336" onclick="cancel(${idx})">Cancelar</button>
+</div>
+`).join('')+'</div>';
+}
+}
+
+function showC(){
+const cont=document.getElementById('ccont');
+if(cs.length===0){
+cont.innerHTML='<div style="text-align:center;padding:80px 20px"><h3 style="color:#4a148c">No tenés cursos</h3><button class="btn" onclick="show(\'servicios\');toggle(\'c\')">Ver Cursos</button></div>';
+}else{
+cont.innerHTML='<div class="grid">'+cs.map(c=>`
+<div class="card" style="text-align:left">
+<h3>${c.curso}</h3>
+<p><strong>Nombre:</strong> ${c.nombre} ${c.apellido}</p>
+<p><strong>Email:</strong> ${c.email}</p>
+</div>
+`).join('')+'</div>';
+}
+}
+
+function cancel(idx){
+if(confirm('¿Cancelar turno?')){
+ts.splice(idx,1);
+showT();
+}
+}
+
+// Fecha mínima
+document.getElementById('f').min=new Date().toISOString().split('T')[0];
+</script>
+
+</body>
+</html>
